@@ -28,7 +28,7 @@ private:
     enum states{INIT, CONNECTED, SIGNED_IN,
                 HANDSHAKE, AUTH, WAITING_AUTH_REQUEST,
                 WAITING_FOR_USERNAME, WAITING_FOR_PASSWORD,
-               WAITING_FOR_MAIL};
+               WAITING_FOR_MAIL, CLOSING};
 
     int state;
 
@@ -61,6 +61,7 @@ private:
     void doAuth();
     void sendUsername();
     void sendPassword();
+    void resetConnection();
 
 
     ~SmtpConnectionManager();

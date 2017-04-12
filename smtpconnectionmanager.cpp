@@ -131,8 +131,14 @@ void SmtpConnectionManager::readyRead()
         sendLoggedInEventToAll(true, "success");
     } else if (responseCode == "535") {
         sendLoggedInEventToAll(false, "Username and password not accepted");
-    }
+        resetConnection();
+    } else if (state == CLOSING) {
+        state = INIT;
+        connectionAvailable = false;
 
+        qDebug() << "Connection closed" << endl;
+        return;
+    }
 }
 
 QString SmtpConnectionManager::storeNextResponseAndGetCode()
@@ -189,6 +195,14 @@ void SmtpConnectionManager::sendPassword()
     qDebug() << "Sending password";
     *streamToServer << QByteArray().append(password).toBase64() << "\r\n";
     streamToServer->flush();
+}
+
+void SmtpConnectionManager::resetConnection()
+{
+    *streamToServer << "QUIT\r\n";
+    streamToServer->flush();
+
+    state = CLOSING;
 }
 
 void SmtpConnectionManager::doHandshake()
