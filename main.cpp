@@ -1,8 +1,6 @@
 #include "loginwindow.h"
-#include "connectionManager.h"
 #include <QMessageBox>
 #include <QApplication>
-#include <smtp.h>
 
 int main(int argc, char *argv[])
 {
