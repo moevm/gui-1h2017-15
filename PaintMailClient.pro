@@ -25,15 +25,11 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += main.cpp\
         loginwindow.cpp \
-    connectionManager.cpp \
-    smtp.cpp \
     abstractconnectionmanager.cpp \
     connectionlistener.cpp \
     smtpconnectionmanager.cpp
 
 HEADERS  += loginwindow.h \
-    connectionManager.h \
-    smtp.h \
     abstractconnectionmanager.h \
     address.h \
     connectionlistener.h \
