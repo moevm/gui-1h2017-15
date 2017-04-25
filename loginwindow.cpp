@@ -9,6 +9,7 @@ LoginWindow::LoginWindow(QWidget *parent) :
     ui(new Ui::LoginWindow)
 {
     ui->setupUi(this);
+    mailWindow = new MailBox();
 
     Address gmailAddress("smtp.mail.ru", 465);
     connectionManager = SmtpConnectionManager::getInstance(this, gmailAddress);
@@ -29,6 +30,8 @@ void LoginWindow::loggedIn(bool success, QString message)
     QMessageBox messageBox;
     if (success) {
         messageBox.setText("Signed in successfully");
+        mailWindow->show();
+        this->close();
     } else {
         messageBox.setText("Log in failed : " + message);
     }
