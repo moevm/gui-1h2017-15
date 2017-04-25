@@ -4,6 +4,9 @@
 #include <QMainWindow>
 #include <QVBoxLayout>
 #include <message.h>
+#include <QScrollArea>
+#include <QListWidget>
+#include <QListWidgetItem>
 
 namespace Ui {
 class MailBox;
@@ -16,13 +19,19 @@ class MailBox : public QMainWindow
 public:
     explicit MailBox(QWidget *parent = 0);
     ~MailBox();
-    void addMessage(QList<Message> *list);
+    void addMessage(QList<Message> *list, QListWidget *lstWgt);
+
+public slots:
+    void onInboxClicked();
+    void onOutboxClicked();
 
 private:
     Ui::MailBox *ui;
-    QVBoxLayout *listMessage;
-    QWidget *window;
+    QScrollArea *window;
+    QListWidget* listWidget;
+    QLayout* layoutVert;
 
+    void clearLayout(QLayout * layout);
     void setIcons();
     void changeSize();
     void resizeEvent(QResizeEvent *event);
