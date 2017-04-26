@@ -28,16 +28,13 @@ SOURCES += main.cpp\
     abstractconnectionmanager.cpp \
     connectionlistener.cpp \
     smtpconnectionmanager.cpp \
-    mailbox.cpp \
-    message.cpp
+    Pop3Client.cpp \
 
 HEADERS  += loginwindow.h \
     abstractconnectionmanager.h \
     address.h \
     connectionlistener.h \
     smtpconnectionmanager.h \
-    mailbox.h \
-    message.h
+    Pop3Client.h \
 
-FORMS    += loginwindow.ui \
-    mailbox.ui
+FORMS    += loginwindow.ui
