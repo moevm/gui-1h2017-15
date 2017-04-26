@@ -8,6 +8,7 @@ MailBox::MailBox(QWidget *parent) :
     ui->setupUi(this);
     connect( ui->inbox, SIGNAL( clicked() ), SLOT( onInboxClicked() ) );
     connect( ui->outbox, SIGNAL( clicked() ), SLOT( onOutboxClicked() ) );
+    connect( ui->logout, SIGNAL( clicked() ), SLOT( onLogOutClicked() ) );
 
     window = new QScrollArea(this);
     window->setGeometry(90, 50, 300, 500);
@@ -153,4 +154,9 @@ void MailBox::onOutboxClicked() {
     list->append(mes2);
 
     addMessage(list, listWidget);
+}
+
+void MailBox::onLogOutClicked() {
+    this->close();
+    emit firstWindow();
 }

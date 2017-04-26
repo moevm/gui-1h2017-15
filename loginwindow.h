@@ -6,6 +6,7 @@
 #include <connectionlistener.h>
 #include <abstractconnectionmanager.h>
 #include <smtpconnectionmanager.h>
+#include <mailbox.h>
 #include <Pop3Client.h>
 
 namespace Ui {
@@ -31,11 +32,13 @@ private slots:
 
 private:
     Ui::LoginWindow *ui;
+    MailBox *mailBox;
 
     // ConnectionListener interface
 public:
     void connected(bool success, QString message);
     void loggedIn(bool success, QString message);
+    void clearForm();
 
 };
 

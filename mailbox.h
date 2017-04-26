@@ -24,12 +24,16 @@ public:
 public slots:
     void onInboxClicked();
     void onOutboxClicked();
+    void onLogOutClicked();
+
+signals:
+    void firstWindow();
 
 private:
     Ui::MailBox *ui;
     QScrollArea *window;
-    QListWidget* listWidget;
-    QLayout* layoutVert;
+    QListWidget *listWidget;
+    QLayout *layoutVert;
 
     void clearLayout(QLayout * layout);
     void setIcons();

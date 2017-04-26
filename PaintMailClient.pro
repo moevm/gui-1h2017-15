@@ -28,6 +28,8 @@ SOURCES += main.cpp\
     abstractconnectionmanager.cpp \
     connectionlistener.cpp \
     smtpconnectionmanager.cpp \
+    message.cpp \
+    mailbox.cpp \
     Pop3Client.cpp \
 
 HEADERS  += loginwindow.h \
@@ -35,6 +37,11 @@ HEADERS  += loginwindow.h \
     address.h \
     connectionlistener.h \
     smtpconnectionmanager.h \
+    message.h \
+    mailbox.h \
     Pop3Client.h \
 
-FORMS    += loginwindow.ui
+FORMS    += loginwindow.ui\
+            mailbox.ui\
+
+QMAKE_CXXFLAGS += -std=c++0x
