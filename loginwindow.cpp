@@ -29,6 +29,19 @@ void LoginWindow::loggedIn(bool success, QString message)
     QMessageBox messageBox;
     if (success) {
         messageBox.setText("Signed in successfully");
+//        Pop3Client client(true, true, true);
+
+//        bool success = client.Connect("pop.mail.ru", 995);
+
+//        bool another = client.Login("Devil42", "mypassword");
+
+//        QVector<Pop3Client::MessageId> vector;
+
+//        bool succ = client.GetMsgList(vector);
+
+//        QString message;
+
+//        bool fff = client.GetMessage(vector.at(5).first, message);
     } else {
         messageBox.setText("Log in failed : " + message);
     }

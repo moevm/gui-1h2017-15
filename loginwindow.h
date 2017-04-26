@@ -6,6 +6,7 @@
 #include <connectionlistener.h>
 #include <abstractconnectionmanager.h>
 #include <smtpconnectionmanager.h>
+#include <pop3client.h>
 
 namespace Ui {
 class LoginWindow;

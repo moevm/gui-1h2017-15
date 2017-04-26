@@ -5,6 +5,7 @@
 #include <QSslSocket>
 
 #include <abstractconnectionmanager.h>
+#include <pop3client.h>
 #include <address.h>
 
 /**

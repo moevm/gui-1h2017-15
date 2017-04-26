@@ -27,12 +27,14 @@ SOURCES += main.cpp\
         loginwindow.cpp \
     abstractconnectionmanager.cpp \
     connectionlistener.cpp \
-    smtpconnectionmanager.cpp
+    smtpconnectionmanager.cpp \
+    Pop3Client.cpp
 
 HEADERS  += loginwindow.h \
     abstractconnectionmanager.h \
     address.h \
     connectionlistener.h \
-    smtpconnectionmanager.h
+    smtpconnectionmanager.h \
+    Pop3Client.h
 
 FORMS    += loginwindow.ui
