@@ -30,14 +30,13 @@ void LoginWindow::loggedIn(bool success, QString message)
 {
     QMessageBox messageBox;
     if (success) {
-        messageBox.setText("Signed in successfully");
+        //messageBox.setText("Signed in successfully");
         mailWindow->show();
         this->close();
     } else {
         messageBox.setText("Log in failed : " + message);
+        messageBox.exec();
     }
-
-    messageBox.exec();
 }
 
 LoginWindow::~LoginWindow()

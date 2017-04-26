@@ -36,8 +36,10 @@ MailBox::MailBox(QWidget *parent) :
     layoutVert->addWidget( listWidget );
     window->setLayout( layoutVert );
     addMessage(list,listWidget);
-
+    ui->inbox->setStyleSheet(QString::fromUtf8("background-color: rgb(0, 128, 128);"));
+    ui->outbox->setStyleSheet(QString::fromUtf8("background-color: rgb(32, 178, 170);"));
     setIcons();
+    setMinimumSize(800, 600);
 }
 
 MailBox::~MailBox()
@@ -115,6 +117,8 @@ void MailBox::changeSize()
 
 void MailBox::onInboxClicked() {
     clearLayout(layoutVert);
+    ui->inbox->setStyleSheet(QString::fromUtf8("background-color: rgb(0, 128, 128);"));
+    ui->outbox->setStyleSheet(QString::fromUtf8("background-color: rgb(32, 178, 170);"));
     listWidget = new QListWidget;
     layoutVert->addWidget( listWidget );
     /*Сейчас пойдет заглушка для списка сообщений*/
@@ -132,11 +136,13 @@ void MailBox::onInboxClicked() {
     list->append(mes5);
     list->append(mes6);
 
-    addMessage(list,listWidget);
+    addMessage(list, listWidget);
 }
 
 void MailBox::onOutboxClicked() {
     clearLayout(layoutVert);
+    ui->inbox->setStyleSheet(QString::fromUtf8("background-color: rgb(32, 178, 170);"));
+    ui->outbox->setStyleSheet(QString::fromUtf8("background-color: rgb(0, 128, 128);"));
     listWidget = new QListWidget;
     layoutVert->addWidget( listWidget );
     /*Сейчас пойдет заглушка для списка сообщений*/
@@ -146,5 +152,5 @@ void MailBox::onOutboxClicked() {
     list->append(mes1);
     list->append(mes2);
 
-    addMessage(list,listWidget);
+    addMessage(list, listWidget);
 }

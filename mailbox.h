@@ -19,7 +19,7 @@ class MailBox : public QMainWindow
 public:
     explicit MailBox(QWidget *parent = 0);
     ~MailBox();
-    void addMessage(QList<Message> *list, QListWidget *lstWgt);
+    void addMessage(QList<Message> *list, QListWidget *listWidget);
 
 public slots:
     void onInboxClicked();
