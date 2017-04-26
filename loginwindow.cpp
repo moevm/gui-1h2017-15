@@ -1,6 +1,7 @@
 #include "loginwindow.h"
 #include "ui_loginwindow.h"
 #include "smtpconnectionmanager.h"
+#include "mailbox.h"
 
 #include <QMessageBox>
 
