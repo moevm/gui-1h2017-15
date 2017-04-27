@@ -14,7 +14,7 @@ LoginWindow::LoginWindow(QWidget *parent) :
     connectionManager = SmtpConnectionManager::getInstance(this, gmailAddress);
 
     mailBox = new MailBox();
-    connect(mailBox, &MailBox::firstWindow, this, &LoginWindow::clearForm);
+    connect(mailBox, &MailBox::firstWindow, this, &LoginWindow::resetConnection);
 }
 
 void LoginWindow::logIn()
@@ -71,7 +71,15 @@ void LoginWindow::clearForm()
     ui->password->clear();
 //    delete connectionManager;
 //    Address gmailAddress("smtp.mail.ru", 465);
-//    connectionManager = SmtpConnectionManager::getInstance(this, gmailAddress);
+    //    connectionManager = SmtpConnectionManager::getInstance(this, gmailAddress);
+}
+
+void LoginWindow::resetConnection()
+{
+    Address gmailAddress("smtp.mail.ru", 465);
+    this->connectionManager = SmtpConnectionManager::getInstance(this, gmailAddress);
+
+    clearForm();
 }
 
 void LoginWindow::on_logInButton_clicked()

@@ -39,6 +39,7 @@ public:
     void connected(bool success, QString message);
     void loggedIn(bool success, QString message);
     void clearForm();
+    void resetConnection();
 
 };
 
