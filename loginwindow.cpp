@@ -15,6 +15,8 @@ LoginWindow::LoginWindow(QWidget *parent) :
 
     mailBox = new MailBox();
     connect(mailBox, &MailBox::firstWindow, this, &LoginWindow::resetConnection);
+
+    testMsg();
 }
 
 void LoginWindow::logIn()
@@ -26,6 +28,29 @@ void LoginWindow::connected(bool success, QString message)
     qDebug() << "connected to the server or not " << message << endl;
 }
 
+void LoginWindow::testMsg()
+{
+    Pop3Client client(true, true, true);
+
+    bool a1 = client.Connect("pop.mail.ru", 995);
+    bool a2 = client.Login("test-gui", "Asdf12");
+
+    QVector<Pop3Client::MessageId> vector;
+
+    bool succ = client.GetMsgList(vector);
+
+    for (int i = 6; i < vector.size(); i++)
+    {
+        QString message;
+        client.GetMessage(vector.at(i).first, message);
+        Message mss;
+        MyParser a;
+        mss = a.parseMail(message);
+        qDebug() << mss.getSender();
+    }
+
+}
+
 void LoginWindow::loggedIn(bool success, QString message)
 {
     QMessageBox messageBox;
@@ -34,7 +59,7 @@ void LoginWindow::loggedIn(bool success, QString message)
         Pop3Client client(true, true, true);
 
          bool success = client.Connect("pop.mail.ru", 995);
-         bool another = client.Login(ui->uname->text(), ui->password->text());
+         bool another = client.Login("test-gui", "Asdf12");
 
          QVector<Pop3Client::MessageId> vector;
 

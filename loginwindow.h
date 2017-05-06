@@ -8,6 +8,7 @@
 #include <smtpconnectionmanager.h>
 #include <mailbox.h>
 #include <Pop3Client.h>
+#include <myparser.h>
 
 namespace Ui {
 class LoginWindow;
@@ -36,6 +37,7 @@ private:
 
     // ConnectionListener interface
 public:
+    void testMsg();
     void connected(bool success, QString message);
     void loggedIn(bool success, QString message);
     void clearForm();

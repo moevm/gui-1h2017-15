@@ -31,6 +31,7 @@ SOURCES += main.cpp\
     message.cpp \
     mailbox.cpp \
     Pop3Client.cpp \
+    myparser.cpp
 
 HEADERS  += loginwindow.h \
     abstractconnectionmanager.h \
@@ -40,6 +41,9 @@ HEADERS  += loginwindow.h \
     message.h \
     mailbox.h \
     Pop3Client.h \
+    message_копия.h \
+    message_копия1.h \
+    myparser.h
 
 FORMS    += loginwindow.ui\
             mailbox.ui\
