@@ -110,4 +110,5 @@ void LoginWindow::resetConnection()
 void LoginWindow::on_logInButton_clicked()
 {
     connectionManager->signIn(ui->uname->text(), ui->password->text());
+    mailBox->setName(ui->uname->text());
 }

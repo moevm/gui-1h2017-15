@@ -9,6 +9,7 @@ MailBox::MailBox(QWidget *parent) :
     connect( ui->inbox, SIGNAL( clicked() ), SLOT( onInboxClicked() ) );
     connect( ui->outbox, SIGNAL( clicked() ), SLOT( onOutboxClicked() ) );
     connect( ui->logout, SIGNAL( clicked() ), SLOT( onLogOutClicked() ) );
+    connect( ui->writeMessage, SIGNAL( clicked() ), SLOT( onWriteMessageClicked() ) );
 
     window = new QScrollArea(this);
     window->setGeometry(90, 50, 300, 500);
@@ -111,6 +112,8 @@ void MailBox::resizeEvent(QResizeEvent *event){
 void MailBox::changeSize()
 {
     ui->logout->setGeometry(this->size().width()-75,0, 75, 31);
+    ui->writeMessage->setGeometry(this->size().width()-185,0, 100, 31);
+    ui->name->setGeometry(this->size().width()-290,0, 100, 40);
     ui->line->setGeometry(0, 20,this->size().width()-20, 20);
     ui->line_2->setGeometry(83, 30, 20, this->size().height());
     window->setGeometry(90, 50, this->size().width()/2.5, this->size().height()-50);
@@ -160,3 +163,14 @@ void MailBox::onLogOutClicked() {
     this->close();
     emit firstWindow();
 }
+
+void MailBox::onWriteMessageClicked() {
+    SendMessage *sendMessage = new SendMessage(this->name);
+    sendMessage->show();
+}
+
+void MailBox::setName(QString name) {
+    this->name = name;
+    ui->name->setText(name);
+}
+

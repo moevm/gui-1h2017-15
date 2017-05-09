@@ -7,6 +7,7 @@
 #include <QScrollArea>
 #include <QListWidget>
 #include <QListWidgetItem>
+#include <sendMessage.h>
 
 namespace Ui {
 class MailBox;
@@ -20,11 +21,13 @@ public:
     explicit MailBox(QWidget *parent = 0);
     ~MailBox();
     void addMessage(QList<Message> *list, QListWidget *listWidget);
+    void setName(QString name);
 
 public slots:
     void onInboxClicked();
     void onOutboxClicked();
     void onLogOutClicked();
+    void onWriteMessageClicked();
 
 signals:
     void firstWindow();
@@ -34,6 +37,7 @@ private:
     QScrollArea *window;
     QListWidget *listWidget;
     QLayout *layoutVert;
+    QString name;
 
     void clearLayout(QLayout * layout);
     void setIcons();
