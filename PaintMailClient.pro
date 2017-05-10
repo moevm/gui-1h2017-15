@@ -42,8 +42,6 @@ HEADERS  += loginwindow.h \
     message.h \
     mailbox.h \
     Pop3Client.h \
-    message_копия.h \
-    message_копия1.h \
     myparser.h \
     sendmessage.h
 

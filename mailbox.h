@@ -7,7 +7,7 @@
 #include <QScrollArea>
 #include <QListWidget>
 #include <QListWidgetItem>
-#include <sendMessage.h>
+#include <sendmessage.h>
 
 namespace Ui {
 class MailBox;
