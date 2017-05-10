@@ -7,6 +7,7 @@
 #include <abstractconnectionmanager.h>
 #include <Pop3Client.h>
 #include <address.h>
+#include <message.h>
 
 /**
  * Working with smtp servers
@@ -22,6 +23,9 @@ private:
     QSslSocket *sslSocket;
     QTextStream *streamToServer;
 
+    Message message;
+    QString messageText;
+
     static SmtpConnectionManager *instance;
 
     QString lastResponse;
@@ -29,7 +33,7 @@ private:
     enum states{INIT, CONNECTED, SIGNED_IN,
                 HANDSHAKE, AUTH, WAITING_AUTH_REQUEST,
                 WAITING_FOR_USERNAME, WAITING_FOR_PASSWORD,
-               WAITING_FOR_MAIL, CLOSING};
+               WAITING_FOR_MAIL, CLOSING, SENDER_SENT, RECIPIENT_SENT, MESSAGE_SENT, MAIL_SENT};
 
     int state;
 
@@ -40,8 +44,10 @@ public:
     // AbstractConnectionManager interface
     void doConnect();
     void signIn(QString username, QString password);
+    void sendMessage(Message message);
 
-    static SmtpConnectionManager  * getInstance(ConnectionListener *connectionListener, Address serverAddress);
+    static SmtpConnectionManager  * createInstance(ConnectionListener *connectionListener, Address serverAddress);
+    static SmtpConnectionManager  * getInstance();
 
 private:
     /**
@@ -54,6 +60,7 @@ private:
 
     void sendConnectEventToAll(bool success, QString message);
     void sendLoggedInEventToAll(bool success, QString message);
+    void sendMessageSentEventToAll(bool success, QString message);
 
     QString storeNextResponseAndGetCode();
     // handshake with the server to get ready to next movements

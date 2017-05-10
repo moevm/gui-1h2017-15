@@ -4,12 +4,13 @@
 #include <QMainWindow>
 #include "message.h"
 #include <QDateTime>
+#include <connectionlistener.h>
 
 namespace Ui {
 class SendMessage;
 }
 
-class SendMessage : public QMainWindow
+class SendMessage : public QMainWindow, public ConnectionListener
 {
     Q_OBJECT
 
@@ -26,6 +27,12 @@ private:
     QString sender;
     void changeSize();
     void resizeEvent(QResizeEvent *event);
+
+    // ConnectionListener interface
+public:
+    void connected(bool success, QString message);
+    void loggedIn(bool success, QString message);
+    void messageSent(bool success, QString message);
 };
 
 #endif // SENDMESSAGE_H

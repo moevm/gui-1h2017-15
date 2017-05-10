@@ -39,6 +39,7 @@ public:
      AbstractConnectionManager(ConnectionListener *listener, Address address);
 
      void addConnectionListener(ConnectionListener *listener);
+     void removeConnectionListener(ConnectionListener *listener);
 
      /**
       * Establish connection

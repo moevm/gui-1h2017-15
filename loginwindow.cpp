@@ -11,7 +11,7 @@ LoginWindow::LoginWindow(QWidget *parent) :
     ui->setupUi(this);
 
     Address gmailAddress("smtp.mail.ru", 465);
-    connectionManager = SmtpConnectionManager::getInstance(this, gmailAddress);
+    connectionManager = SmtpConnectionManager::createInstance(this, gmailAddress);
 
     mailBox = new MailBox();
     connect(mailBox, &MailBox::firstWindow, this, &LoginWindow::resetConnection);
@@ -79,6 +79,10 @@ void LoginWindow::loggedIn(bool success, QString message)
     }
 }
 
+void LoginWindow::messageSent(bool success, QString message)
+{
+}
+
 LoginWindow::~LoginWindow()
 {
     delete ui;
@@ -101,8 +105,7 @@ void LoginWindow::clearForm()
 
 void LoginWindow::resetConnection()
 {
-    Address gmailAddress("smtp.mail.ru", 465);
-    this->connectionManager = SmtpConnectionManager::getInstance(this, gmailAddress);
+    this->connectionManager = SmtpConnectionManager::getInstance();
 
     clearForm();
 }
