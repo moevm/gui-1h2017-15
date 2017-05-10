@@ -4,14 +4,18 @@
 #include <message.h>
 #include <QDebug>
 
-
 class MyParser
 {
 public:
     MyParser();
     Message parseMail(QString input);
 private:
-    QString receiver,sender,theme;
+    QString theme;
+    QString title;
+    QString body;
+    QDateTime dateTime;
+    QString sender;
+    QString receiver;
 };
 
 #endif // MYPARSER_H

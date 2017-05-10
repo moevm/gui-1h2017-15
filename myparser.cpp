@@ -26,7 +26,7 @@ Message MyParser::parseMail(QString input)
     rReceiver.indexIn(allFields.at(0));
     QStringList qsl = rReceiver.capturedTexts();
     receiver = qsl.at(1);
-//    qDebug()<<"Receiver - " << receiver;
+    //    qDebug()<<"Receiver - " << receiver;
     msg.setReceiver(receiver);
 
     // THEME WORKS
@@ -43,7 +43,7 @@ Message MyParser::parseMail(QString input)
         ba.append(theme);
         theme = QByteArray::fromBase64(ba);
     }
-//    qDebug() << "Theme - " << theme;
+    //    qDebug() << "Theme - " << theme;
     msg.setTheme(theme);
 
 
@@ -54,7 +54,7 @@ Message MyParser::parseMail(QString input)
     QStringList stlSender = rSender.capturedTexts();
     QString sender = stlSender.at(0);
     sender.remove(0, 14);
-//    qDebug()<<"Sender - "<< sender;
+    //    qDebug()<<"Sender - "<< sender;
     msg.setSender(sender);
 
     // DATE WORKS
@@ -64,10 +64,38 @@ Message MyParser::parseMail(QString input)
     QStringList stlDate = rDate.capturedTexts();
     QString test = stlDate.at(1);
     test.remove(test.length()-2,2);
-//    qDebug()<<"Date - "<<test;
+    //    qDebug()<<"Date - "<<test;
     QDateTime dt = QDateTime::fromString(stlDate.at(1), Qt::RFC2822Date);
     msg.setDateTime(dt);
-//    qDebug() << dt.toString();
+    //    qDebug() << dt.toString();
 
+
+    // BODY
+    QRegExp rBody = QRegExp("Body msg(.*\\br\\b)");
+    int nrBody = rBody.indexIn(input);
+//    qDebug()<<"num Body - "<<QString::number(nrBody);
+    QStringList stlBody = rBody.capturedTexts();
+    QString test1 = stlBody.at(1);
+    QStringList bres = test1.split("\\r\\n");
+
+    for (int i = 0; i < bres.size(); i++) // фильтр
+    {
+        if (bres.at(i) == "")
+        {
+            bres.replace(i, "\\n");
+        }
+
+        body.append(bres.at(i));
+        body.append(" ");
+
+        if (i < 4)
+        {
+            title.append(bres.at(i));
+            title.append(" ");
+        }
+
+    }
+    msg.setBody(body);
+    msg.setTitle(title);
     return msg;
 }
