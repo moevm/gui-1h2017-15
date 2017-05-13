@@ -67,7 +67,7 @@ void LoginWindow::loggedIn(bool success, QString message)
          QList<Message> *list = new QList<Message>;
          int i = vector.size()-1;
          int k = 0;
-         while (k < 100) {
+         while (k < 50 && vector.size() > k) { //отображение только последних 50 писем, иначе работает миллион лет
              QString message;
              client.GetMessage(vector.at(i).first, message);
              Message mss;
