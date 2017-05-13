@@ -15,8 +15,7 @@ LoginWindow::LoginWindow(QWidget *parent) :
 
     mailBox = new MailBox();
     connect(mailBox, &MailBox::firstWindow, this, &LoginWindow::resetConnection);
-
-    testMsg();
+   // testMsg();
 }
 
 void LoginWindow::logIn()
@@ -33,7 +32,7 @@ void LoginWindow::testMsg()
     Pop3Client client(true, true, true);
 
     bool a1 = client.Connect("pop.mail.ru", 995);
-    bool a2 = client.Login("test-gui", "Asdf12");
+    bool a2 = client.Login(ui->uname->text(), ui->password->text());
 
     QVector<Pop3Client::MessageId> vector;
 
@@ -59,18 +58,28 @@ void LoginWindow::loggedIn(bool success, QString message)
         Pop3Client client(true, true, true);
 
          bool success = client.Connect("pop.mail.ru", 995);
-         bool another = client.Login("test-gui", "Asdf12");
+         bool another = client.Login(ui->uname->text(), ui->password->text());
 
          QVector<Pop3Client::MessageId> vector;
 
          bool succ = client.GetMsgList(vector);
 
-         QString message;
-
-         bool fff = client.GetMessage(vector.at(5).first, message);
-
-         qDebug() << message;
-
+         QList<Message> *list = new QList<Message>;
+         int i = vector.size()-1;
+         int k = 0;
+         while (k < 100) {
+             QString message;
+             client.GetMessage(vector.at(i).first, message);
+             Message mss;
+             MyParser a;
+             mss = a.parseMail(message);
+             list->append(mss);
+             //qDebug() << mss.getSender();
+             i--;
+             k++;
+         }
+         mailBox->setList(list);
+         mailBox->initWidget();
          mailBox->show();
          this->close();
     } else {
@@ -113,5 +122,7 @@ void LoginWindow::resetConnection()
 void LoginWindow::on_logInButton_clicked()
 {
     connectionManager->signIn(ui->uname->text(), ui->password->text());
-    mailBox->setName(ui->uname->text());
+    mailBox->setName(ui->uname->text() + ui->comboBox->currentText());
 }
+
+

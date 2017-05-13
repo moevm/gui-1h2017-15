@@ -31,7 +31,7 @@
       <rect>
        <x>30</x>
        <y>90</y>
-       <width>211</width>
+       <width>131</width>
        <height>25</height>
       </rect>
      </property>
@@ -101,6 +101,29 @@
       <string>Need help?</string>
      </property>
     </widget>
+    <widget class="QComboBox" name="comboBox">
+     <property name="geometry">
+      <rect>
+       <x>160</x>
+       <y>90</y>
+       <width>81</width>
+       <height>25</height>
+      </rect>
+     </property>
+     <property name="editable">
+      <bool>true</bool>
+     </property>
+     <item>
+      <property name="text">
+       <string>@mail.ru</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>@gmail.com</string>
+      </property>
+     </item>
+    </widget>
    </widget>
    <widget class="QLabel" name="label">
     <property name="geometry">
@@ -128,7 +151,7 @@
      <x>0</x>
      <y>0</y>
      <width>581</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>
