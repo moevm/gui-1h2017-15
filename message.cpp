@@ -5,6 +5,13 @@ Message::Message(QString theme, QString title, QString body, QString sender, QSt
 {
 }
 
+Message::Message(){
+
+}
+
+QString Message::getMessage() const{
+}
+
 QString Message::getTheme() const {
     return theme;
 }
@@ -19,7 +26,7 @@ QString Message::getBody() const {
 
 QString Message::getDateTime() const {
     QString str;
-    str = dateTime.toString("dd/MM/yy/hh/mm");
+    str = dateTime.toString(Qt::RFC2822Date);
     return str;
 }
 
