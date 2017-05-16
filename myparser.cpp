@@ -72,30 +72,148 @@ Message MyParser::parseMail(QString input)
 
     // BODY
     QRegExp rBody = QRegExp("Body msg(.*\\br\\b)");
-    int nrBody = rBody.indexIn(input);
-//    qDebug()<<"num Body - "<<QString::number(nrBody);
-    QStringList stlBody = rBody.capturedTexts();
-    QString test1 = stlBody.at(1);
-    QStringList bres = test1.split("\\r\\n");
 
-    for (int i = 0; i < bres.size(); i++) // фильтр
+    int nrBody = rBody.indexIn(input);
+    if (nrBody > -1)
     {
-        if (bres.at(i) == "")
+        //    qDebug()<<"num Body - "<<QString::number(nrBody);
+        QStringList stlBody = rBody.capturedTexts();
+        QString test1 = stlBody.at(1);
+        QStringList bres = test1.split("\\r\\n");
+
+        for (int i = 0; i < bres.size(); i++) // фильтр
         {
-            bres.replace(i, "\\n");
+            if (bres.at(i) == "")
+            {
+                bres.replace(i, "\\n");
+            }
+
+            body.append(bres.at(i));
+            body.append(" ");
+
+            if (i < 4)
+            {
+                title.append(bres.at(i));
+                title.append(" ");
+            }
+
         }
 
-        body.append(bres.at(i));
-        body.append(" ");
+        msg.setTitle(title);
+    } else {
+        QList <msgBody> la;
+        la = parseBody(input);
 
-        if (i < 4)
+        msg.setBodyText(la.at(0));
+        msg.setBodyHTML(la.at(1));
+        // set ? title
+    }
+
+
+
+
+    qDebug() << msg.getBodyHTML().getMessage();
+
+    return msg;
+}
+
+QList<msgBody> MyParser::parseBody(QString input)
+{
+    QList<msgBody> a;
+    QStringList input1 = input.split("\\r\\n\\t");
+
+    for(int i = 0; i < input1.size(); i++)
+    {
+        //        qDebug()<<"Field " << i << " = " << input1.at(i);
+    }
+    QString needed = input1.at(4);
+
+    QStringList input2 = needed.split("\\r\\n");
+
+    for(int i = 0; i < input2.size(); i++)
+    {
+        //        qDebug()<<"Field " << i << " = " << input2.at(i);
+    }
+
+    //    QRegExp big = QRegExp("[^\[\]\r\\]");
+    //    int aa = big.indexIn(input);
+    //    QStringList a = big.capturedTexts();
+    //    qDebug() << QString::number(aa);
+
+    for(int i = 0; i < input2.size(); i++)
+    {
+        int j = i;
+        if (input2.at(j).startsWith("----ALT"))
         {
-            title.append(bres.at(i));
-            title.append(" ");
+            if (input2.at(j+1).startsWith("Content"))
+            {
+                QRegExp rContent = QRegExp("Content-Type:\\s([A-z]*.[A-z]*)");
+                int aa = rContent.indexIn(input2.at(j+1));
+                QStringList rContentL = rContent.capturedTexts();
+
+                //                qDebug() << "CONTENT" << QString::number(aa);
+                //                qDebug() << ;
+
+                QRegExp rCharset = QRegExp("charset=([A-z]*-[0-9]*)");
+                int a1 = rCharset.indexIn(input2.at(j+1));
+                QStringList rCharsetL = rCharset.capturedTexts();
+
+
+
+
+                QRegExp rTransfer = QRegExp("Content-Transfer-Encoding:\\s([A-z0-9]*)");
+                int a2 = rTransfer.indexIn(input2.at(j+2));
+                QStringList rTransferL = rTransfer.capturedTexts();
+
+                QStringList mss;
+                if (input2.at(j+3) == "")
+                {
+                    int y = j+4;
+
+                    while (!input2.at(y).endsWith("=="))
+                    {
+                        if(input2.at(y).startsWith("----ALT"))
+                            break;
+                        mss.append(input2.at(y));
+                        y++;
+                    }
+                    if(!input2.at(y).startsWith("----ALT"))
+                        mss.append(input2.at(y));
+
+                    QString resM;
+
+
+                    for(int i = 0; i < mss.size(); i++)
+                    {
+
+                        resM.append(mss.at(i));
+
+
+                    }
+
+                    if (resM.endsWith("=="))
+                        resM.remove(resM.length()-2,2);
+
+                    QByteArray ba;
+                    ba.append(resM);
+                    resM = QByteArray::fromBase64(ba);
+
+                    msgBody m;
+
+                    m.setContentType(rContentL.at(1));
+                    m.setCharset(rCharsetL.at(1));
+                    m.setBase(rTransferL.at(1));
+                    m.setMessage(resM);
+
+                    a.append(m);
+                }
+
+            }
+
+            j++;
         }
 
     }
-    //msg.setBody(body);
-    msg.setTitle(title);
-    return msg;
+    return a;
+
 }
