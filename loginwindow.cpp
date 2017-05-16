@@ -15,7 +15,7 @@ LoginWindow::LoginWindow(QWidget *parent) :
 
     mailBox = new MailBox();
     connect(mailBox, &MailBox::firstWindow, this, &LoginWindow::resetConnection);
-    testMsg();
+   // testMsg();
 }
 
 void LoginWindow::logIn()
@@ -32,7 +32,7 @@ void LoginWindow::testMsg()
     Pop3Client client(true, true, true);
 
     bool a1 = client.Connect("pop.mail.ru", 995);
-    bool a2 = client.Login("test-gui", "Asdf12");
+    bool a2 = client.Login(ui->uname->text(), ui->password->text());
 
     QVector<Pop3Client::MessageId> vector;
 

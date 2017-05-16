@@ -79,6 +79,7 @@ void SmtpConnectionManager::sendMessage(Message messageStruct)
     messageText.append("From: " + messageStruct.getSender() + "\n");
     messageText.append("Subject: " + messageStruct.getTheme() + "\n");
     messageText.append(messageStruct.getBodyText().getMessage());
+
     messageText.replace( QString::fromLatin1( "\n" ), QString::fromLatin1( "\r\n" ) );
     messageText.replace( QString::fromLatin1( "\r\n.\r\n" ),
     QString::fromLatin1( "\r\n..\r\n" ) );

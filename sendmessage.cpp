@@ -76,4 +76,5 @@ void SendMessage::onSendClicked() {
     //Message message(ui->lineEdit_2->text(), ui->lineEdit_2->text(), ui->textEdit->toPlainText(), this->sender, ui->lineEdit->text(), QDateTime::currentDateTime());
     SmtpConnectionManager *instance = SmtpConnectionManager::getInstance();
     //instance->sendMessage(message);
+
 }
