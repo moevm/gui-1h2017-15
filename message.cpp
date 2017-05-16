@@ -1,7 +1,7 @@
 #include "message.h"
 
-Message::Message(QString theme, QString title, QString body, QString sender, QString receiver, QDateTime dateTime)
-    : theme(theme), title(title), body(body), sender(sender), receiver(receiver), dateTime(dateTime)
+Message::Message(QString theme, QString title, msgBody bodyText, msgBody bodyHTML, QString sender, QString receiver, QDateTime dateTime)
+    : theme(theme), title(title), bodyText(bodyText), bodyHTML(bodyHTML), sender(sender), receiver(receiver), dateTime(dateTime)
 {
 }
 
@@ -20,8 +20,11 @@ QString Message::getTitle() const {
     return title;
 }
 
-QString Message::getBody() const {
-    return body;
+msgBody Message::getBodyText() const {
+    return bodyText;
+}
+msgBody Message::getBodyHTML() const {
+    return bodyHTML;
 }
 
 QString Message::getDateTime() const {
@@ -46,10 +49,12 @@ void Message::setTitle(QString title) {
     this->title = title;
 }
 
-void Message::setBody(QString body) {
-    this->body = body;
+void Message::setBodyText(msgBody body) {
+    this->bodyText = body;
 }
-
+void Message::setBodyHTML(msgBody body) {
+    this->bodyHTML = body;
+}
 void Message::setDateTime(QDateTime dateTime) {
     this->dateTime = dateTime;
 }

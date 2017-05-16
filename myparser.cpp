@@ -95,7 +95,7 @@ Message MyParser::parseMail(QString input)
         }
 
     }
-    msg.setBody(body);
+    //msg.setBody(body);
     msg.setTitle(title);
     return msg;
 }

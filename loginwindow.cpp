@@ -11,11 +11,10 @@ LoginWindow::LoginWindow(QWidget *parent) :
     ui->setupUi(this);
 
     Address gmailAddress("smtp.mail.ru", 465);
-    connectionManager = SmtpConnectionManager::getInstance(this, gmailAddress);
+    connectionManager = SmtpConnectionManager::createInstance(this, gmailAddress);
 
     mailBox = new MailBox();
     connect(mailBox, &MailBox::firstWindow, this, &LoginWindow::resetConnection);
-
     testMsg();
 }
 
@@ -46,7 +45,7 @@ void LoginWindow::testMsg()
         Message mss;
         MyParser a;
         mss = a.parseMail(message);
-        qDebug() << mss.getSender();
+        qDebug() << message;
     }
 
 }
@@ -59,24 +58,38 @@ void LoginWindow::loggedIn(bool success, QString message)
         Pop3Client client(true, true, true);
 
          bool success = client.Connect("pop.mail.ru", 995);
-         bool another = client.Login("test-gui", "Asdf12");
+         bool another = client.Login(ui->uname->text(), ui->password->text());
 
          QVector<Pop3Client::MessageId> vector;
 
          bool succ = client.GetMsgList(vector);
 
-         QString message;
-
-         bool fff = client.GetMessage(vector.at(5).first, message);
-
-         qDebug() << message;
-
+         QList<Message> *list = new QList<Message>;
+         int i = vector.size()-1;
+         int k = 0;
+         while (k < 50 && vector.size() > k) { //отображение только последних 50 писем, иначе работает миллион лет
+             QString message;
+             client.GetMessage(vector.at(i).first, message);
+             Message mss;
+             MyParser a;
+             mss = a.parseMail(message);
+             list->append(mss);
+             //qDebug() << mss.getSender();
+             i--;
+             k++;
+         }
+         mailBox->setList(list);
+         mailBox->initWidget();
          mailBox->show();
          this->close();
     } else {
         messageBox.setText("Log in failed : ");
         messageBox.exec();
     }
+}
+
+void LoginWindow::messageSent(bool success, QString message)
+{
 }
 
 LoginWindow::~LoginWindow()
@@ -101,8 +114,7 @@ void LoginWindow::clearForm()
 
 void LoginWindow::resetConnection()
 {
-    Address gmailAddress("smtp.mail.ru", 465);
-    this->connectionManager = SmtpConnectionManager::getInstance(this, gmailAddress);
+    this->connectionManager = SmtpConnectionManager::getInstance();
 
     clearForm();
 }
@@ -110,5 +122,7 @@ void LoginWindow::resetConnection()
 void LoginWindow::on_logInButton_clicked()
 {
     connectionManager->signIn(ui->uname->text(), ui->password->text());
-    mailBox->setName(ui->uname->text());
+    mailBox->setName(ui->uname->text() + ui->comboBox->currentText());
 }
+
+

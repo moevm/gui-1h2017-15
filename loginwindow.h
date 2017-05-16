@@ -37,12 +37,13 @@ private:
 
     // ConnectionListener interface
 public:
-    void testMsg();
     void connected(bool success, QString message);
     void loggedIn(bool success, QString message);
+    void messageSent(bool success, QString message);
+
+    void testMsg();
     void clearForm();
     void resetConnection();
-
 };
 
 #endif // LOGINWINDOW_H

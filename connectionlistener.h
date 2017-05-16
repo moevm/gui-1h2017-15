@@ -28,6 +28,16 @@ public:
      * @param message - error or success messages
      */
     virtual void loggedIn(bool success, QString message) = 0;
+
+    /**
+     * Response after message was sent to recipient
+     *
+     * @brief messageSent
+     *
+     * @param success - success flag
+     * @param message - error or success messages
+     */
+    virtual void messageSent(bool success, QString message) = 0;
 };
 
 #endif // CONNECTIONLISTENER_H

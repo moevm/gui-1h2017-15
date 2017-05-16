@@ -1,4 +1,7 @@
 #include "smtpconnectionmanager.h"
+#include <iostream>
+
+using namespace std;
 
 SmtpConnectionManager * SmtpConnectionManager::instance;
 
@@ -27,6 +30,13 @@ void SmtpConnectionManager::sendLoggedInEventToAll(bool success, QString message
 {
     for (int i = 0; i < connectionListeners.size(); i++) {
         connectionListeners.at(i)->loggedIn(success, message);
+    }
+}
+
+void SmtpConnectionManager::sendMessageSentEventToAll(bool success, QString message)
+{
+    for (int i = 0; i < connectionListeners.size(); i++) {
+        connectionListeners.at(i)->messageSent(success, message);
     }
 }
 
@@ -61,7 +71,35 @@ void SmtpConnectionManager::signIn(QString username, QString pass)
     }*/
 }
 
-SmtpConnectionManager *SmtpConnectionManager::getInstance(ConnectionListener *connListener, Address serverAddr)
+void SmtpConnectionManager::sendMessage(Message messageStruct)
+{
+    message = messageStruct;
+
+    messageText = "To: " + messageStruct.getReceiver() + "\n";
+    messageText.append("From: " + messageStruct.getSender() + "\n");
+    messageText.append("Subject: " + messageStruct.getTheme() + "\n");
+    messageText.append(messageStruct.getBodyText().getMessage());
+    messageText.replace( QString::fromLatin1( "\n" ), QString::fromLatin1( "\r\n" ) );
+    messageText.replace( QString::fromLatin1( "\r\n.\r\n" ),
+    QString::fromLatin1( "\r\n..\r\n" ) );
+    state = SENDER_SENT;
+
+    qDebug() << "MAIL FROM:<" << messageStruct.getSender() << ">";
+    *streamToServer << "MAIL FROM:<" <<  messageStruct.getSender() << ">\r\n";
+    streamToServer->flush();
+}
+
+SmtpConnectionManager *SmtpConnectionManager::getInstance()
+{
+    if (instance == nullptr) {
+        cerr << "Cannot get instance before initialization!" << endl;
+        return nullptr;
+    }
+
+    return instance;
+}
+
+SmtpConnectionManager *SmtpConnectionManager::createInstance(ConnectionListener *connListener, Address serverAddr)
 {
     if (instance == nullptr) {
         instance = new SmtpConnectionManager(connListener, serverAddr);
@@ -129,6 +167,27 @@ void SmtpConnectionManager::readyRead()
         state = WAITING_FOR_MAIL;
     } else if (state == WAITING_FOR_MAIL && responseCode == "235") {
         sendLoggedInEventToAll(true, "success");
+    } else if ( state == SENDER_SENT && responseCode == "250" )
+    {
+        //Apperantly for Google it is mandatory to have MAIL FROM and RCPT email formated the following way -> <email@gmail.com>
+        *streamToServer << "RCPT TO:<" << message.getReceiver() << ">\r\n"; //r
+        streamToServer->flush();
+        state = RECIPIENT_SENT;
+    }
+    else if ( state == RECIPIENT_SENT && responseCode == "250" )
+    {
+        *streamToServer << "DATA\r\n";
+        streamToServer->flush();
+        state = MESSAGE_SENT;
+    }
+    else if ( state == MESSAGE_SENT && responseCode == "354" )
+    {
+        *streamToServer << messageText << "\r\n.\r\n";
+        streamToServer->flush();
+    }
+    else if ( state == MESSAGE_SENT && responseCode == "250" )
+    {
+        sendMessageSentEventToAll(true, "Message Sent");
     } else if (responseCode == "535") {
         sendLoggedInEventToAll(false, "Username and password not accepted");
         resetConnection();

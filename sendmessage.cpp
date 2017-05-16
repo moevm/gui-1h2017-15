@@ -1,11 +1,17 @@
 #include "sendmessage.h"
 #include "ui_sendmessage.h"
+#include "smtpconnectionmanager.h"
+#include <QMessageBox>
 
 SendMessage::SendMessage(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::SendMessage)
 {
     ui->setupUi(this);
+
+    SmtpConnectionManager *instance = SmtpConnectionManager::getInstance();
+    instance->addConnectionListener(this);
+
     connect( ui->sendMessage, SIGNAL( clicked() ), SLOT( onSendClicked() ) );
 }
 
@@ -13,6 +19,9 @@ SendMessage::SendMessage(QString name) :
     QMainWindow(0),
     ui(new Ui::SendMessage)
 {
+    SmtpConnectionManager *instance = SmtpConnectionManager::getInstance();
+    instance->addConnectionListener(this);
+
     ui->setupUi(this);
     connect( ui->sendMessage, SIGNAL( clicked() ), SLOT( onSendClicked() ) );
     this->sender=name;
@@ -27,6 +36,33 @@ void SendMessage::resizeEvent(QResizeEvent *event){
     this->changeSize();
 }
 
+void SendMessage::connected(bool success, QString message)
+{
+
+}
+
+void SendMessage::loggedIn(bool success, QString message)
+{
+
+}
+
+void SendMessage::messageSent(bool success, QString message)
+{
+    QMessageBox messageBox;
+    if (success) {
+        messageBox.setText("Message has been sent!");
+    } else {
+        messageBox.setText("Message hasn't been sent! ");
+    }
+
+    messageBox.exec();
+
+    SmtpConnectionManager *instance = SmtpConnectionManager::getInstance();
+    instance->removeConnectionListener(this);
+
+    this->close();
+}
+
 void SendMessage::changeSize()
 {
     ui->lineEdit->setGeometry(60,20, this->size().width()-80, 20);
@@ -36,5 +72,8 @@ void SendMessage::changeSize()
 }
 
 void SendMessage::onSendClicked() {
-    Message(ui->lineEdit_2->text(), ui->lineEdit_2->text(), ui->textEdit->toPlainText(), this->sender, ui->lineEdit->text(), QDateTime::currentDateTime());
+    // TODO: fix constructor
+    //Message message(ui->lineEdit_2->text(), ui->lineEdit_2->text(), ui->textEdit->toPlainText(), this->sender, ui->lineEdit->text(), QDateTime::currentDateTime());
+    SmtpConnectionManager *instance = SmtpConnectionManager::getInstance();
+    //instance->sendMessage(message);
 }

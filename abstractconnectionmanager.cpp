@@ -13,6 +13,11 @@ void AbstractConnectionManager::addConnectionListener(ConnectionListener *listen
     connectionListeners.append(listener);
 }
 
+void AbstractConnectionManager::removeConnectionListener(ConnectionListener *listener)
+{
+    connectionListeners.removeOne(listener);
+}
+
 Address AbstractConnectionManager::getConnectionAddress()
 {
     return serverAddr;
