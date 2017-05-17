@@ -8,6 +8,7 @@ MyParser::MyParser()
 Message MyParser::parseMail(QString input)
 {
     Message msg;
+    QString ib = input;
     //    QRegExp big = QRegExp("[^\[\]\r\\]");
     //    int aa = big.indexIn(input);
     //    QStringList a = big.capturedTexts();
@@ -102,17 +103,18 @@ Message MyParser::parseMail(QString input)
         msg.setTitle(title);
     } else {
         QList <msgBody> la;
-        la = parseBody(input);
+//        qDebug() << "INPUT  = " << ib;
+//        la = parseBody(ib);
 
-        msg.setBodyText(la.at(0));
-        msg.setBodyHTML(la.at(1));
+//        msg.setBodyText(la.at(0));
+//        msg.setBodyHTML(la.at(1));
         // set ? title
     }
 
 
 
 
-    qDebug() << msg.getBodyHTML().getMessage();
+//    qDebug() << msg.getBodyHTML().getMessage();
 
     return msg;
 }
@@ -124,9 +126,9 @@ QList<msgBody> MyParser::parseBody(QString input)
 
     for(int i = 0; i < input1.size(); i++)
     {
-        //        qDebug()<<"Field " << i << " = " << input1.at(i);
+        qDebug()<<"Field " << i << " = " << input1.at(i);
     }
-    QString needed = input1.at(4);
+    QString needed = input1.at(4); // here
 
     QStringList input2 = needed.split("\\r\\n");
 

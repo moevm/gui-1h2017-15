@@ -15,7 +15,7 @@ LoginWindow::LoginWindow(QWidget *parent) :
 
     mailBox = new MailBox();
     connect(mailBox, &MailBox::firstWindow, this, &LoginWindow::resetConnection);
-   // testMsg();
+    testMsg();
 }
 
 void LoginWindow::logIn()
@@ -32,20 +32,28 @@ void LoginWindow::testMsg()
     Pop3Client client(true, true, true);
 
     bool a1 = client.Connect("pop.mail.ru", 995);
-    bool a2 = client.Login(ui->uname->text(), ui->password->text());
+    bool a2 = client.Login("test-gui", "Asdf12");
 
     QVector<Pop3Client::MessageId> vector;
 
     bool succ = client.GetMsgList(vector);
 
-    for (int i = 6; i < vector.size(); i++)
+    for (int i = 0; i < vector.size(); i++)
     {
         QString message;
         client.GetMessage(vector.at(i).first, message);
         Message mss;
         MyParser a;
         mss = a.parseMail(message);
-        qDebug() << message;
+        qDebug() << "\nMSG: " << i << "   " << message;
+
+//        qDebug() << "       ";
+//        qDebug() << "Message "<<i;
+//        qDebug()<<"charset " << i << " = " << mss.getBodyHTML().getCharset();
+//        qDebug()<<"content " << i << " = " << mss.getBodyHTML().getContentType();
+//        qDebug()<<"trans " << i << " = " << mss.getBodyHTML().getBase();
+//        qDebug()<<"message " << i << " = " << mss.getBodyHTML().getMessage();
+
     }
 
 }
