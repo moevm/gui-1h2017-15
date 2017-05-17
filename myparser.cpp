@@ -75,9 +75,10 @@ Message MyParser::parseMail(QString input)
     QRegExp rBody = QRegExp("Body msg(.*\\br\\b)");
 
     int nrBody = rBody.indexIn(input);
+    qDebug()<<"num Body - "<<QString::number(nrBody);
+
     if (nrBody > -1)
     {
-        //    qDebug()<<"num Body - "<<QString::number(nrBody);
         QStringList stlBody = rBody.capturedTexts();
         QString test1 = stlBody.at(1);
         QStringList bres = test1.split("\\r\\n");
@@ -131,7 +132,7 @@ QList<msgBody> MyParser::parseBody(QString input)
 
     for(int i = 0; i < input1.size(); i++)
     {
-//        qDebug()<<"Field " << i << " = " << input1.at(i);
+        //        qDebug()<<"Field " << i << " = " << input1.at(i);
     }
 
     if(input1.size() < 4)

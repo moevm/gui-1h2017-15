@@ -54,3 +54,5 @@ FORMS    += loginwindow.ui\
 CONFIG += debug
 
 QMAKE_CXXFLAGS += -std=c++0x
+
+RESOURCES += msg6.txt

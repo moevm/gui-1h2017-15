@@ -38,21 +38,44 @@ void LoginWindow::testMsg()
 
     bool succ = client.GetMsgList(vector);
 
-    for (int i = 0; i < vector.size(); i++)
+    for (int i = 4; i < 5; i++)
     {
+//        QFile file("D:/msg6.txt");
+
+//        if (!file.open(QFile::ReadOnly))
+//        {
+//            qDebug() << "Fail to open file";
+//            return;
+//        }
+//        QTextStream ts(&file);
+
+//        QString input;
+//        input = ts.readAll();
+
+        // TODO: from here
+
+//        MyParser mps;
+//        Message msg;
+//        msg = mps.parseMail(input);
+
+
+
         QString message;
         client.GetMessage(vector.at(i).first, message);
-        Message mss;
-        MyParser a;
-        mss = a.parseMail(message);
         qDebug() << "\nMSG: " << i << "   " << message;
 
-//        qDebug() << "       ";
-//        qDebug() << "Message "<<i;
-//        qDebug()<<"charset " << i << " = " << mss.getBodyHTML().getCharset();
-//        qDebug()<<"content " << i << " = " << mss.getBodyHTML().getContentType();
-//        qDebug()<<"trans " << i << " = " << mss.getBodyHTML().getBase();
-//        qDebug()<<"message " << i << " = " << mss.getBodyHTML().getMessage();
+        MyParser mps;
+        Message msg;
+        msg = mps.parseMail(message);
+
+        qDebug() << "       ";
+        qDebug() << "Message "<<i;
+        qDebug() << "Sender: "<< msg.getSender();
+        qDebug() << "Receiver: " << msg.getReceiver();
+        qDebug() << "Time: " << msg.getDateTime();
+        qDebug() << "Theme: " << msg.getTheme();
+        qDebug() << "Body: " << msg.getBodyText().getMessage();
+        qDebug() << "Title: " << msg.getTitle();
 
     }
 
