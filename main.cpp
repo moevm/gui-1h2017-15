@@ -7,7 +7,9 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
 
     LoginWindow w;
-    w.show();  
+    w.show();
+//    MailBox m;
+//    m.show();
 
     return a.exec();
 }

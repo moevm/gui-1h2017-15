@@ -10,34 +10,16 @@ MailBox::MailBox(QWidget *parent) :
     connect( ui->outbox, SIGNAL( clicked() ), SLOT( onOutboxClicked() ) );
     connect( ui->logout, SIGNAL( clicked() ), SLOT( onLogOutClicked() ) );
     connect( ui->writeMessage, SIGNAL( clicked() ), SLOT( onWriteMessageClicked() ) );
-
     window = new QScrollArea(this);
     window->setGeometry(90, 50, 300, 500);
     QPalette Pal(palette());
     Pal.setColor(QPalette::Background, Qt::lightGray);
     window->setAutoFillBackground(true);
     window->setPalette(Pal);
-
-//    /*Сейчас пойдет заглушка для списка сообщений*/
-//    Message mes1("HELLO", "123", "sf", "ER", "YT", QDateTime(QDate(2012, 7, 6), QTime(8, 30, 0)));
-//    Message mes2("HELLO2", "123", "dgd", "ER", "YT", QDateTime(QDate(2012, 7, 6), QTime(8, 30, 0)));
-//    Message mes3("HELLO3", "123", "dgd", "ER", "YT", QDateTime(QDate(2012, 7, 6), QTime(8, 30, 0)));
-//    Message mes4("HELLO4", "123", "dgd", "ER", "YT", QDateTime(QDate(2012, 7, 6), QTime(8, 30, 0)));
-//    Message mes5("HELLO5", "123", "dgd", "ER", "YT", QDateTime(QDate(2012, 7, 6), QTime(8, 30, 0)));
-//    Message mes6("HELLO6", "123", "dgd", "ER", "YT", QDateTime(QDate(2012, 7, 6), QTime(8, 30, 0)));
-//    QList<Message> *list = new QList<Message>;
-//    list->append(mes1);
-//    list->append(mes2);
-//    list->append(mes3);
-//    list->append(mes4);
-//    list->append(mes5);
-//    list->append(mes6);
-
-//    listWidget = new QListWidget;
-//    layoutVert = new QVBoxLayout;
-//    layoutVert->addWidget( listWidget );
-//    window->setLayout( layoutVert );
-//    addMessage(listRec,listWidget);
+    Pal.setColor(QPalette::Background, Qt::lightGray);
+    ui->messageWidget ->setGeometry(590, 30, 500, 500);
+    ui->messageWidget ->setAutoFillBackground(true);
+    ui->messageWidget ->setPalette(Pal);
     ui->inbox->setStyleSheet(QString::fromUtf8("background-color: rgb(0, 128, 128);"));
     ui->outbox->setStyleSheet(QString::fromUtf8("background-color: rgb(32, 178, 170);"));
     setIcons();
@@ -92,6 +74,7 @@ void MailBox::addMessage(QList<Message> *list, QListWidget* listWidget ) {
         QListWidgetItem* item = new QListWidgetItem( listWidget );
         item->setSizeHint( message->sizeHint() );
         listWidget ->setItemWidget( item, message);
+
     }
 
 }
@@ -117,6 +100,12 @@ void MailBox::changeSize()
     ui->line->setGeometry(0, 20,this->size().width()-20, 20);
     ui->line_2->setGeometry(83, 30, 20, this->size().height());
     window->setGeometry(90, 50, this->size().width()/2.5, this->size().height()-50);
+    ui->messageWidget->setGeometry(this->size().width()/2.5 + 100, 30 , this->size().width()/1.5, this->size().height());
+    ui->date->setGeometry(this->size().width()/5 + 80 , 10 , this->size().width()/5, 20);
+    ui->theme->setGeometry(70, 10 , this->size().width()/5, 20);
+    ui->sender->setGeometry(100, 40 , this->size().width()/4, 20);
+    ui->receirver->setGeometry(100, 70 , this->size().width()/4, 20);
+    ui->textBrowser->setGeometry(10, 110 , this->size().width()/2 - 50 , ui->messageWidget->size().height() - 250);
 }
 
 void MailBox::onInboxClicked() {
@@ -125,22 +114,8 @@ void MailBox::onInboxClicked() {
     ui->outbox->setStyleSheet(QString::fromUtf8("background-color: rgb(32, 178, 170);"));
     listWidget = new QListWidget;
     layoutVert->addWidget( listWidget );
-//    /*Сейчас пойдет заглушка для списка сообщений*/
-//    Message mes1("HELLO", "123", "sf", "ER", "YT", QDateTime(QDate(2012, 7, 6), QTime(8, 30, 0)));
-//    Message mes2("HELLO2", "123", "dgd", "ER", "YT", QDateTime(QDate(2012, 7, 6), QTime(8, 30, 0)));
-//    Message mes3("HELLO3", "123", "dgd", "ER", "YT", QDateTime(QDate(2012, 7, 6), QTime(8, 30, 0)));
-//    Message mes4("HELLO4", "123", "dgd", "ER", "YT", QDateTime(QDate(2012, 7, 6), QTime(8, 30, 0)));
-//    Message mes5("HELLO5", "123", "dgd", "ER", "YT", QDateTime(QDate(2012, 7, 6), QTime(8, 30, 0)));
-//    Message mes6("HELLO6", "123", "dgd", "ER", "YT", QDateTime(QDate(2012, 7, 6), QTime(8, 30, 0)));
-//    QList<Message> *list = new QList<Message>;
-//    list->append(mes1);
-//    list->append(mes2);
-//    list->append(mes3);
-//    list->append(mes4);
-//    list->append(mes5);
-//    list->append(mes6);
-
     addMessage(listRec, listWidget);
+    connectList();
 }
 
 void MailBox::onOutboxClicked() {
@@ -155,8 +130,8 @@ void MailBox::onOutboxClicked() {
     QList<Message> *list = new QList<Message>;
 //    list->append(mes1);
 //    list->append(mes2);
-
     addMessage(list, listWidget);
+    //connectList();
 }
 
 void MailBox::onLogOutClicked() {
@@ -184,4 +159,21 @@ void MailBox::initWidget() {
     layoutVert->addWidget( listWidget );
     window->setLayout( layoutVert );
     addMessage(listRec,listWidget);
+    connectList();
+}
+
+void MailBox::on_listWidget_clicked(QListWidgetItem *item)
+{
+    int row = listWidget->row(item);
+    ui->sender->setText(listRec->at(row).getSender());
+    ui->receirver->setText(listRec->at(row).getReceiver());
+    ui->date->setText(listRec->at(row).getDateTime());
+    ui->theme->setText(listRec->at(row).getTheme());
+    ui->textBrowser->setText(listRec->at(row).getBody());
+}
+
+void MailBox::connectList()
+{
+    connect( listWidget, SIGNAL( itemClicked(QListWidgetItem *) ),this,  SLOT( on_listWidget_clicked(QListWidgetItem *) ));
+    emit on_listWidget_clicked(listWidget->item(0));
 }
