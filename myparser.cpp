@@ -101,20 +101,25 @@ Message MyParser::parseMail(QString input)
         }
 
         msg.setTitle(title);
+
+        msgBody tmp;
+        tmp.setMessage(body);
+        msg.setBodyHTML(tmp);
+        msg.setBodyText(tmp);
+
     } else {
         QList <msgBody> la;
-//        qDebug() << "INPUT  = " << ib;
-//        la = parseBody(ib);
+        la = parseBody(ib);
+        if (la.size() < 2)
+        {
+            qDebug() << "Error, last stage ";
+        } else {
+            msg.setBodyText(la.at(0));
+            msg.setBodyHTML(la.at(1));
+            msg.setTitle(la.at(0).getMessage());
+        }
 
-//        msg.setBodyText(la.at(0));
-//        msg.setBodyHTML(la.at(1));
-        // set ? title
     }
-
-
-
-
-//    qDebug() << msg.getBodyHTML().getMessage();
 
     return msg;
 }
@@ -126,96 +131,108 @@ QList<msgBody> MyParser::parseBody(QString input)
 
     for(int i = 0; i < input1.size(); i++)
     {
-        qDebug()<<"Field " << i << " = " << input1.at(i);
-    }
-    QString needed = input1.at(4); // here
-
-    QStringList input2 = needed.split("\\r\\n");
-
-    for(int i = 0; i < input2.size(); i++)
-    {
-        //        qDebug()<<"Field " << i << " = " << input2.at(i);
+//        qDebug()<<"Field " << i << " = " << input1.at(i);
     }
 
-    //    QRegExp big = QRegExp("[^\[\]\r\\]");
-    //    int aa = big.indexIn(input);
-    //    QStringList a = big.capturedTexts();
-    //    qDebug() << QString::number(aa);
-
-    for(int i = 0; i < input2.size(); i++)
+    if(input1.size() < 4)
     {
-        int j = i;
-        if (input2.at(j).startsWith("----ALT"))
+        qDebug() << "Error, stage 1";
+        msgBody f;
+        return a;
+
+    } else {
+        QString needed = input1.at(4); // here
+
+        QStringList input2 = needed.split("\\r\\n");
+
+        for(int i = 0; i < input2.size(); i++)
         {
-            if (input2.at(j+1).startsWith("Content"))
-            {
-                QRegExp rContent = QRegExp("Content-Type:\\s([A-z]*.[A-z]*)");
-                int aa = rContent.indexIn(input2.at(j+1));
-                QStringList rContentL = rContent.capturedTexts();
-
-                //                qDebug() << "CONTENT" << QString::number(aa);
-                //                qDebug() << ;
-
-                QRegExp rCharset = QRegExp("charset=([A-z]*-[0-9]*)");
-                int a1 = rCharset.indexIn(input2.at(j+1));
-                QStringList rCharsetL = rCharset.capturedTexts();
-
-
-
-
-                QRegExp rTransfer = QRegExp("Content-Transfer-Encoding:\\s([A-z0-9]*)");
-                int a2 = rTransfer.indexIn(input2.at(j+2));
-                QStringList rTransferL = rTransfer.capturedTexts();
-
-                QStringList mss;
-                if (input2.at(j+3) == "")
-                {
-                    int y = j+4;
-
-                    while (!input2.at(y).endsWith("=="))
-                    {
-                        if(input2.at(y).startsWith("----ALT"))
-                            break;
-                        mss.append(input2.at(y));
-                        y++;
-                    }
-                    if(!input2.at(y).startsWith("----ALT"))
-                        mss.append(input2.at(y));
-
-                    QString resM;
-
-
-                    for(int i = 0; i < mss.size(); i++)
-                    {
-
-                        resM.append(mss.at(i));
-
-
-                    }
-
-                    if (resM.endsWith("=="))
-                        resM.remove(resM.length()-2,2);
-
-                    QByteArray ba;
-                    ba.append(resM);
-                    resM = QByteArray::fromBase64(ba);
-
-                    msgBody m;
-
-                    m.setContentType(rContentL.at(1));
-                    m.setCharset(rCharsetL.at(1));
-                    m.setBase(rTransferL.at(1));
-                    m.setMessage(resM);
-
-                    a.append(m);
-                }
-
-            }
-
-            j++;
+            //        qDebug()<<"Field " << i << " = " << input2.at(i);
         }
 
+        //    QRegExp big = QRegExp("[^\[\]\r\\]");
+        //    int aa = big.indexIn(input);
+        //    QStringList a = big.capturedTexts();
+        //    qDebug() << QString::number(aa);
+
+        for(int i = 0; i < input2.size(); i++)
+        {
+            int j = i;
+            if (input2.at(j).startsWith("----ALT"))
+            {
+                if (input2.at(j+1).startsWith("Content"))
+                {
+                    QRegExp rContent = QRegExp("Content-Type:\\s([A-z]*.[A-z]*)");
+                    int aa = rContent.indexIn(input2.at(j+1));
+                    QStringList rContentL = rContent.capturedTexts();
+
+                    //                qDebug() << "CONTENT" << QString::number(aa);
+                    //                qDebug() << ;
+
+                    QRegExp rCharset = QRegExp("charset=([A-z]*-[0-9]*)");
+                    int a1 = rCharset.indexIn(input2.at(j+1));
+                    QStringList rCharsetL = rCharset.capturedTexts();
+
+
+
+
+                    QRegExp rTransfer = QRegExp("Content-Transfer-Encoding:\\s([A-z0-9]*)");
+                    int a2 = rTransfer.indexIn(input2.at(j+2));
+                    QStringList rTransferL = rTransfer.capturedTexts();
+
+                    QStringList mss;
+                    if (input2.at(j+3) == "")
+                    {
+                        int y = j+4;
+
+                        while (!input2.at(y).endsWith("=="))
+                        {
+                            if(input2.at(y).startsWith("----ALT"))
+                                break;
+                            mss.append(input2.at(y));
+                            y++;
+                        }
+                        if(!input2.at(y).startsWith("----ALT"))
+                            mss.append(input2.at(y));
+
+                        QString resM;
+
+
+                        for(int i = 0; i < mss.size(); i++)
+                        {
+
+                            resM.append(mss.at(i));
+
+
+                        }
+
+                        if (resM.endsWith("=="))
+                            resM.remove(resM.length()-2,2);
+
+                        QByteArray ba;
+                        ba.append(resM);
+                        resM = QByteArray::fromBase64(ba);
+
+                        msgBody m;
+
+                        m.setContentType(rContentL.at(1));
+                        m.setCharset(rCharsetL.at(1));
+                        m.setBase(rTransferL.at(1));
+                        m.setMessage(resM);
+
+                        a.append(m);
+                    }
+
+                }
+
+                j++;
+            }
+
+        }
+        return a;
     }
-    return a;
+
+
+
 
 }
