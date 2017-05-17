@@ -169,7 +169,8 @@ void MailBox::on_listWidget_clicked(QListWidgetItem *item)
     ui->receirver->setText(listRec->at(row).getReceiver());
     ui->date->setText(listRec->at(row).getDateTime());
     ui->theme->setText(listRec->at(row).getTheme());
-    ui->textBrowser->setText(listRec->at(row).getBody());
+    //вывод текста
+    //ui->textBrowser->setText(listRec->at(row).getBodyText().getMessage());
 }
 
 void MailBox::connectList()
