@@ -14,7 +14,7 @@ Message MyParser::parseMail(QString input)
     //    QStringList a = big.capturedTexts();
     //    qDebug() << QString::number(aa);
 
-    QStringList allFields = input.split("\\r\\n");
+    QStringList allFields = input.split("\r\n");
     //    for(int i=0; i<allFields.count(); i++)
     //    {
     //        qDebug()<<""<< i << " Da Value Thing: " << allFields.at(i);
@@ -31,15 +31,15 @@ Message MyParser::parseMail(QString input)
     msg.setReceiver(receiver);
 
     // THEME WORKS
-    QRegExp rTheme = QRegExp("Subject:\\s([A-z0-9=?-]*\\br\\b)");
+    QRegExp rTheme = QRegExp("Subject:\\s([A-z0-9=?-]*)");
     int nrTheme = rTheme.indexIn(input);
     QStringList stlTheme = rTheme.capturedTexts();
     QString theme = stlTheme.at(0);
-    theme.remove(theme.size()-2,2);
     theme.remove(0,9);
     if (theme.contains("=?UTF-8"))
     {
-        theme.remove(0,9);
+        theme.remove(theme.size()-2,2);
+        theme.remove(0,10);
         QByteArray ba;
         ba.append(theme);
         theme = QByteArray::fromBase64(ba);
@@ -59,12 +59,12 @@ Message MyParser::parseMail(QString input)
     msg.setSender(sender);
 
     // DATE WORKS
-    QRegExp rDate = QRegExp("Date:\\s([A-z0-9,\\s:+]*\\br\\b)");
+    QRegExp rDate = QRegExp("Date:\\s([A-z0-9,\\s:+]*)");
     int nrDate = rDate.indexIn(input);
     //qDebug()<<"num Date - "<<QString::number(nrDate);
     QStringList stlDate = rDate.capturedTexts();
     QString test = stlDate.at(1);
-    test.remove(test.length()-2,2);
+    test.remove(test.length()-7,7); // last 2 = 1
     //    qDebug()<<"Date - "<<test;
     QDateTime dt = QDateTime::fromString(stlDate.at(1), Qt::RFC2822Date);
     msg.setDateTime(dt);
@@ -72,30 +72,34 @@ Message MyParser::parseMail(QString input)
 
 
     // BODY
-    QRegExp rBody = QRegExp("Body msg(.*\\br\\b)");
+    QRegExp rBody = QRegExp("Body msg(.*)");
 
     int nrBody = rBody.indexIn(input);
+//    qDebug()<<"num Body - "<<QString::number(nrBody);
+
     if (nrBody > -1)
     {
-        //    qDebug()<<"num Body - "<<QString::number(nrBody);
         QStringList stlBody = rBody.capturedTexts();
         QString test1 = stlBody.at(1);
-        QStringList bres = test1.split("\\r\\n");
+        QStringList bres = test1.split("\r\n");
 
+        int titleCntr = 0;
         for (int i = 0; i < bres.size(); i++) // фильтр
         {
             if (bres.at(i) == "")
             {
-                bres.replace(i, "\\n");
+                bres.replace(i, "\n");
             }
 
             body.append(bres.at(i));
             body.append(" ");
 
-            if (i < 4)
+            if (bres.at(i) != "\n" && titleCntr < 5)
             {
+
                 title.append(bres.at(i));
                 title.append(" ");
+                titleCntr++;
             }
 
         }
@@ -126,12 +130,13 @@ Message MyParser::parseMail(QString input)
 
 QList<msgBody> MyParser::parseBody(QString input)
 {
+//    qDebug()<<"parsBody() input : \n" << input;
     QList<msgBody> a;
-    QStringList input1 = input.split("\\r\\n\\t");
+    QStringList input1 = input.split("\r\n\t");
 
     for(int i = 0; i < input1.size(); i++)
     {
-//        qDebug()<<"Field " << i << " = " << input1.at(i);
+        //        qDebug()<<"Field " << i << " = " << input1.at(i);
     }
 
     if(input1.size() < 4)
@@ -143,7 +148,7 @@ QList<msgBody> MyParser::parseBody(QString input)
     } else {
         QString needed = input1.at(4); // here
 
-        QStringList input2 = needed.split("\\r\\n");
+        QStringList input2 = needed.split("\r\n");
 
         for(int i = 0; i < input2.size(); i++)
         {

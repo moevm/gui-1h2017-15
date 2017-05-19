@@ -55,5 +55,5 @@ FORMS    += loginwindow.ui\
 QMAKE_CXXFLAGS += -std=c++0x
 
 RESOURCES += \
-    image.qrc
-
+    image.qrc\
+    msg6.txt

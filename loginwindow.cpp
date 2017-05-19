@@ -42,20 +42,20 @@ void LoginWindow::testMsg()
     {
         QString message;
         client.GetMessage(vector.at(i).first, message);
-        Message mss;
-        MyParser a;
-        mss = a.parseMail(message);
-        qDebug() << "\nMSG: " << i << "   " << message;
+        //        qDebug() << "\nMSG: " << i << "   " << message;
 
-//        qDebug() << "       ";
-//        qDebug() << "Message "<<i;
-//        qDebug()<<"charset " << i << " = " << mss.getBodyHTML().getCharset();
-//        qDebug()<<"content " << i << " = " << mss.getBodyHTML().getContentType();
-//        qDebug()<<"trans " << i << " = " << mss.getBodyHTML().getBase();
-//        qDebug()<<"message " << i << " = " << mss.getBodyHTML().getMessage();
+        MyParser mps;
+        Message msg;
+        msg = mps.parseMail(message);
 
+        qDebug() << "\nMessage "<<i;
+        qDebug() << "Sender: "<< msg.getSender();
+        qDebug() << "Receiver: " << msg.getReceiver();
+        qDebug() << "Time: " << msg.getDateTime();
+        qDebug() << "Theme: " << msg.getTheme();
+        qDebug() << "Body: " << msg.getBodyText().getMessage();
+        qDebug() << "Title: " << msg.getTitle();
     }
-
 }
 
 void LoginWindow::loggedIn(bool success, QString message)
@@ -65,31 +65,31 @@ void LoginWindow::loggedIn(bool success, QString message)
         //messageBox.setText("Signed in successfully");
         Pop3Client client(true, true, true);
 
-         bool success = client.Connect("pop.mail.ru", 995);
-         bool another = client.Login(ui->uname->text(), ui->password->text());
+        bool success = client.Connect("pop.mail.ru", 995);
+        bool another = client.Login(ui->uname->text(), ui->password->text());
 
-         QVector<Pop3Client::MessageId> vector;
+        QVector<Pop3Client::MessageId> vector;
 
-         bool succ = client.GetMsgList(vector);
+        bool succ = client.GetMsgList(vector);
 
-         QList<Message> *list = new QList<Message>;
-         int i = vector.size()-1;
-         int k = 0;
-         while (k < 50 && vector.size() > k) { //отображение только последних 50 писем, иначе работает миллион лет
-             QString message;
-             client.GetMessage(vector.at(i).first, message);
-             Message mss;
-             MyParser a;
-             mss = a.parseMail(message);
-             list->append(mss);
-             //qDebug() << mss.getSender();
-             i--;
-             k++;
-         }
-         mailBox->setList(list);
-         mailBox->initWidget();
-         mailBox->show();
-         this->close();
+        QList<Message> *list = new QList<Message>;
+        int i = vector.size()-1;
+        int k = 0;
+        while (k < 50 && vector.size() > k) { //отображение только последних 50 писем, иначе работает миллион лет
+            QString message;
+            client.GetMessage(vector.at(i).first, message);
+            Message mss;
+            MyParser a;
+            mss = a.parseMail(message);
+            list->append(mss);
+            //qDebug() << mss.getSender();
+            i--;
+            k++;
+        }
+        mailBox->setList(list);
+        mailBox->initWidget();
+        mailBox->show();
+        this->close();
     } else {
         messageBox.setText("Log in failed : ");
         messageBox.exec();
@@ -115,8 +115,8 @@ void LoginWindow::clearForm()
     this->show();
     ui->uname->clear();
     ui->password->clear();
-//    delete connectionManager;
-//    Address gmailAddress("smtp.mail.ru", 465);
+    //    delete connectionManager;
+    //    Address gmailAddress("smtp.mail.ru", 465);
     //    connectionManager = SmtpConnectionManager::getInstance(this, gmailAddress);
 }
 

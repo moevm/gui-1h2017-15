@@ -9,6 +9,7 @@
 #include <mailbox.h>
 #include <Pop3Client.h>
 #include <myparser.h>
+#include <QTextStream>
 
 namespace Ui {
 class LoginWindow;
