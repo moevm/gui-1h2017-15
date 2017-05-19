@@ -34,9 +34,9 @@ MailBox::~MailBox()
 
 void MailBox::setIcons()
 {
-    ui->inbox->setIcon(QIcon("../gui-1h2017-15/image/inbox.png"));
+    ui->inbox->setIcon(QIcon(":/image/inbox.png"));
     ui->inbox->setIconSize(QSize(65,65));
-    ui->outbox->setIcon(QIcon("../gui-1h2017-15/image/outbox.png"));
+    ui->outbox->setIcon(QIcon(":/image/outbox.png"));
     ui->outbox->setIconSize(QSize(65,65));
 }
 

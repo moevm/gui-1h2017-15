@@ -51,6 +51,9 @@ FORMS    += loginwindow.ui\
             mailbox.ui \
     sendmessage.ui
 
-CONFIG += debug
 
 QMAKE_CXXFLAGS += -std=c++0x
+
+RESOURCES += \
+    image.qrc
+

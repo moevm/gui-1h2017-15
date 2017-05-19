@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>image/inbox.png</file>
+        <file>image/outbox.png</file>
+    </qresource>
+</RCC>
