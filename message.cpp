@@ -4,6 +4,13 @@ Message::Message(QString theme, QString title, msgBody bodyText, msgBody bodyHTM
     : theme(theme), title(title), bodyText(bodyText), bodyHTML(bodyHTML), sender(sender), receiver(receiver), dateTime(dateTime)
 {
 }
+Message::Message(QString theme, QString title, QString a, QString sender, QString receiver, QDateTime dateTime)
+    : theme(theme), title(title), sender(sender), receiver(receiver), dateTime(dateTime)
+{
+    bodyText.setMessage(a);
+    bodyHTML.setMessage(a);
+}
+
 
 Message::Message(){
 

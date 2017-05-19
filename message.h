@@ -19,6 +19,8 @@ private:
 
 public:
     Message();
+    Message(QString theme, QString title, QString a, QString sender, QString receiver, QDateTime dateTime);
+
     Message(QString theme, QString title, msgBody bodyText, msgBody bodyHTML, QString sender, QString receiver, QDateTime dateTime);
     QString getMessage() const;
     QString getTheme() const;
