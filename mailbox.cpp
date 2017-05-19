@@ -124,12 +124,11 @@ void MailBox::onOutboxClicked() {
     ui->outbox->setStyleSheet(QString::fromUtf8("background-color: rgb(0, 128, 128);"));
     listWidget = new QListWidget;
     layoutVert->addWidget( listWidget );
-    /*Сейчас пойдет заглушка для списка сообщений - переделать*/
-//    Message mes1("HELLO1", "1233", "sf", "ER", "YT", QDateTime(QDate(2012, 7, 6), QTime(8, 30, 0)));
-//    Message mes2("HELLO1", "1233", "dgd", "ER4", "Y4T", QDateTime(QDate(2012, 7, 6), QTime(8, 30, 0)));
+    Message mes1("HELLO1", "1233", "sf", "ER", "YT", QDateTime(QDate(2012, 7, 6), QTime(8, 30, 0)));
+    Message mes2("HELLO1", "1233", "dgd", "ER4", "Y4T", QDateTime(QDate(2012, 7, 6), QTime(8, 30, 0)));
     QList<Message> *list = new QList<Message>;
-//    list->append(mes1);
-//    list->append(mes2);
+    list->append(mes1);
+    list->append(mes2);
     addMessage(list, listWidget);
     //connectList();
 }
@@ -170,7 +169,7 @@ void MailBox::on_listWidget_clicked(QListWidgetItem *item)
     ui->date->setText(listRec->at(row).getDateTime());
     ui->theme->setText(listRec->at(row).getTheme());
     //вывод текста
-    //ui->textBrowser->setText(listRec->at(row).getBodyText().getMessage());
+    ui->textBrowser->setText(listRec->at(row).getBodyHTML().getMessage());
 }
 
 void MailBox::connectList()
